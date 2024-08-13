@@ -1,5 +1,3 @@
-version: '3.3'
-
 services:
   swag:
     image: linuxserver/swag
@@ -14,12 +12,12 @@ services:
       - VALIDATION=http
       - EMAIL=fox@iuca.kg # optional
       - EXTRA_DOMAINS=zaebmail.ru # change for your domain
-   volumes:
+    volumes:
       - ./config:/config
-   ports:
-    - 443:443
-    - 80:80
-   restart: unless-stopped
+    ports:
+      - 443:443
+      - 80:80
+    restart: unless-stopped
 
   db_wp: # change name for every new site wordpress
     image: mysql:5.7
