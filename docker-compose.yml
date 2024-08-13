@@ -1,0 +1,51 @@
+version: '3.3'
+
+services:
+  swag:
+    image: linuxserver/swag
+    container_name: swag
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Samara
+      - URL=zaebmail.ru # change for your domain
+      - VALIDATION=http
+      - EMAIL=fox@iuca.kg # optional
+      - EXTRA_DOMAINS=zaebmail.ru # change for your domain
+   volumes:
+      - ./config:/config
+   ports:
+    - 443:443
+    - 80:80
+   restart: unless-stopped
+
+  db_wp: # change name for every new site wordpress
+    image: mysql:5.7
+    container_name: db_wp # change name for every new site wordpress
+    restart: always
+    ports:
+      - 3315:3306 # change port for every new site wordpress
+    volumes:
+      - ./config/www/ff/mysql:/var/lib/mysql # change directory for every new site wordpress
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_ROOT_PASSWORD: qwe2rbnjM@@ # change this password for you
+
+  wordpress_ff: # change name for every new site wordpress
+    image: wordpress:latest
+    container_name: wordpress_ff # change name for every new site wordpress
+    restart: always
+    ports:
+      - 7000:80 # change port for every new site wordpress
+    volumes:
+      - ./config/www/ff/config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini # change directory for every new site wordpress
+      - ./config/www/ff/wordpress:/var/www/html # change directory for every new site wordpress
+    environment:
+      WORDPRESS_DB_HOST: db_wp # change optional
+      WORDPRESS_DB_NAME: wordpress # change optional
+      WORDPRESS_DB_USER: root # change optional
+      WORDPRESS_DB_PASSWORD: qwe2rbnjM@@ # change this password for you
+    depends_on:
+      - db_wp # change name for every new site wordpress
